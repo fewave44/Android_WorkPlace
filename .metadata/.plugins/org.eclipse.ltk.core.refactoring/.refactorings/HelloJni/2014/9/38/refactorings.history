@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;HelloJni/jni/hello-jni.c&apos; to &apos;hello-jni.cpp&apos;" description="Rename resource &apos;hello-jni.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="jni/hello-jni.c" name="hello-jni.cpp" stamp="1410856226680" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;HelloJni/jni/hello-jni.cpp&apos; to &apos;hello-jni.c&apos;" description="Rename resource &apos;hello-jni.cpp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="jni/hello-jni.cpp" name="hello-jni.c" stamp="1410856965260" updateReferences="true"/>
+</session>

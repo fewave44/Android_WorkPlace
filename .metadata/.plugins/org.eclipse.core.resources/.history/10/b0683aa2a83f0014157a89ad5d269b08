@@ -1,0 +1,356 @@
+package com.example.blockmove;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+
+import android.R;
+import android.R.string;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources.Theme;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore.Audio;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+
+public class GameSurfaceView extends SurfaceView implements Runnable,SurfaceHolder.Callback{
+	
+	private Paint paint_black_STROKE, paint_balct_fill;
+	private Paint paint_focus;
+	private Paint pain_score;
+	private int TextColor = 0x70000000; 
+	private int background = Color.GRAY;
+	private float width;
+	private float height;
+	private int locationX, X;
+	private int locationY, Y;
+	private float speed = 15f; //low:10 middle:20 fast:40
+	private SurfaceHolder sh = null;
+	private int focus_gra = 0; //µ±Ç°·½¿é
+	private int scroe = 0;
+	private int topScore;
+	private boolean  isOver = false;
+	public boolean pauseGame = false;
+	private RectF bottom_rect_left;
+	private RectF bottom_rect_center;
+	private RectF bottom_rect_right;
+	private Path bottom_arr_left;
+	private Path bottom_arr_down;
+	private Path bottom_arr_right;
+	public Thread game;
+	private SoundPool sildeVideo;
+	private int video;
+	private AudioManager mgr;
+	float streamVolumeCurrent;
+	float streamVolumeMax;
+	float volume;
+	HashMap<Integer, Integer> soundPoolMap;
+	
+	Handler handler;
+	
+	private ArrayList<MyGraph> graLists = new ArrayList<MyGraph>();;
+	private Context context;
+	public GameSurfaceView(Context context) {
+		// TODO Auto-generated constructor stub
+		super(context);
+		this.context = context;
+		SharedPreferences sp = context.getSharedPreferences("HeightScore", 0);
+		topScore = sp.getInt("Scroe", 0);
+		init();
+	}
+	public GameSurfaceView(Context context, Handler handler){
+		super(context);
+		this.context = context;
+		this.handler = handler;
+		init();
+	}
+	
+	private void init(){
+		sh = getHolder();
+		sh.addCallback(this); 
+		
+		paint_black_STROKE = new Paint();
+		paint_black_STROKE.setColor(Color.BLACK);
+		paint_black_STROKE.setStyle(Style.STROKE);
+		paint_black_STROKE.setAntiAlias(true);
+		paint_black_STROKE.setStrokeWidth(10.0f);
+		
+		paint_balct_fill = new Paint();
+		paint_balct_fill.setColor(Color.BLACK);
+		paint_balct_fill.setStyle(Style.FILL);
+		paint_balct_fill.setAntiAlias(true);
+		
+		paint_focus = new Paint();
+		paint_focus.setColor(Color.RED);
+		paint_focus.setStyle(Style.STROKE);
+		paint_focus.setStrokeWidth(10.0f);
+		paint_focus.setAntiAlias(true);
+		
+		pain_score = new Paint();
+		pain_score.setColor(TextColor);
+		pain_score.setStyle(Style.STROKE);
+		pain_score.setAntiAlias(true);
+		pain_score.setStrokeWidth(1.0f);
+		pain_score.setTextSize(35.0f);
+		pain_score.setTextAlign(Align.CENTER);
+		
+		sildeVideo = new SoundPool(2, AudioManager.STREAM_MUSIC, 100);
+//		soundPoolMap.put(1, sildeVideo.load(context, com.example.blockmove.R.raw.sildevideo, 1));
+		mgr = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);   
+	    streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC); 
+	}
+	
+	
+	private void draw(){
+		Canvas canvas = sh.lockCanvas();
+		
+		try{	
+		canvas.drawColor(background);
+		canvas.drawText(" "+"score: " + scroe,MyGraph.squLength/2, MyGraph.squLength/4, pain_score);	
+		canvas.drawText("TopScore: " + topScore, MyGraph.squLength * 4, MyGraph.squLength/4, pain_score);
+		for(int i = 0; i < graLists.size(); i++)
+		{			
+			if(i == focus_gra)
+				canvas.drawRect(graLists.get(i).getOutRectf(), paint_focus);
+			else
+				canvas.drawRect(graLists.get(i).getOutRectf(), paint_black_STROKE);
+			canvas.drawRect(graLists.get(i).getinRectf(), paint_balct_fill);
+			canvas.drawPath(graLists.get(i).getPath(), paint_balct_fill);		
+		}
+		canvas.drawRect(bottom_rect_left, pain_score);
+		canvas.drawPath(bottom_arr_left, pain_score);
+
+		canvas.drawRect(bottom_rect_center, pain_score);
+		canvas.drawPath(bottom_arr_down, pain_score);
+		
+		canvas.drawRect(bottom_rect_right, pain_score);
+		canvas.drawPath(bottom_arr_right, pain_score);
+		}
+		catch(Exception e)
+		{
+			Log.v("android", "draw is error !");
+		}
+		finally
+		{
+			sh.unlockCanvasAndPost(canvas);
+		}
+	}
+	private void gameOverDraw(){
+		Canvas canvas = sh.lockCanvas();
+		try{
+			canvas.drawColor(background);
+			canvas.drawText("Game Over!",width/2, height/2, pain_score);
+		}
+		catch(Exception e){
+		}
+		finally{
+			sh.unlockCanvasAndPost(canvas);
+		}
+	}
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		width = getWidth();
+		height = getHeight();	
+		graLists.add(new MyGraph(width, height));
+		
+		bottom_rect_left = new RectF(MyGraph.splite, height - MyGraph.squLength, MyGraph.splite + MyGraph.squLength, height);
+		bottom_rect_center = new RectF(width/2 - MyGraph.squLength/2, height - MyGraph.squLength, 
+									width/2 - MyGraph.squLength/2 + MyGraph.squLength, height);
+		bottom_rect_right = new RectF(width - MyGraph.splite - MyGraph.squLength, height - MyGraph.squLength,
+									width - MyGraph.splite, height);
+		bottom_arr_left = new Path();	//bottom_arr_left
+		bottom_arr_left.moveTo(MyGraph.splite, height - MyGraph.squLength/2);
+		bottom_arr_left.lineTo(MyGraph.splite + MyGraph.squLength/2, height - MyGraph.squLength);
+		bottom_arr_left.lineTo(MyGraph.splite + MyGraph.squLength/2, height - MyGraph.squLength + MyGraph.splite);
+		bottom_arr_left.lineTo(MyGraph.splite + MyGraph.squLength - MyGraph.splite, height - MyGraph.squLength + MyGraph.splite);
+		bottom_arr_left.lineTo(MyGraph.splite + MyGraph.squLength - MyGraph.splite, height - MyGraph.splite);
+		bottom_arr_left.lineTo(MyGraph.splite + MyGraph.squLength/2, height - MyGraph.splite);
+		bottom_arr_left.lineTo(MyGraph.splite + MyGraph.squLength/2, height);
+		bottom_arr_left.close();
+		
+		bottom_arr_down = new Path();	//bottom_arr_down
+		bottom_arr_down.moveTo(width/2, height);
+		bottom_arr_down.lineTo(width/2 + MyGraph.squLength/2, height - MyGraph.squLength/2);
+		bottom_arr_down.lineTo(width/2 + MyGraph.squLength/2 - MyGraph.splite, height - MyGraph.squLength/2);
+		bottom_arr_down.lineTo(width/2 + MyGraph.squLength/2 - MyGraph.splite, height - MyGraph.squLength + MyGraph.splite);
+		bottom_arr_down.lineTo(width/2 - MyGraph.squLength/2 + MyGraph.splite, height - MyGraph.squLength + MyGraph.splite);
+		bottom_arr_down.lineTo(width/2 - MyGraph.squLength/2 + MyGraph.splite, height - MyGraph.squLength/2);
+		bottom_arr_down.lineTo(width/2 - MyGraph.squLength/2, height - MyGraph.squLength/2);
+		bottom_arr_down.close();
+		
+		bottom_arr_right = new Path();	//bottom_arr_right
+		bottom_arr_right.moveTo(width - MyGraph.splite, height - MyGraph.squLength/2);
+		bottom_arr_right.lineTo(width - MyGraph.splite - MyGraph.squLength/2, height);
+		bottom_arr_right.lineTo(width - MyGraph.splite - MyGraph.squLength/2, height - MyGraph.splite);
+		bottom_arr_right.lineTo(width - MyGraph.squLength, height - MyGraph.splite);
+		bottom_arr_right.lineTo(width - MyGraph.squLength, height - MyGraph.squLength + MyGraph.splite);
+		bottom_arr_right.lineTo(width - MyGraph.splite - MyGraph.squLength/2, height - MyGraph.squLength + MyGraph.splite);
+		bottom_arr_right.lineTo(width - MyGraph.splite - MyGraph.squLength/2, height - MyGraph.squLength );
+		bottom_arr_right.close();
+		
+		video = sildeVideo.load(context,com.example.blockmove.R.raw.sildevideo, 1);
+		game = new Thread(this);
+		game.start();
+	}
+	
+	@Override
+	public void surfaceDestroyed(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(!pauseGame)
+		{
+				
+			try{
+				Thread.sleep(0);
+			}
+			catch(Exception e){
+				System.out.print("error");
+				break;
+			}
+			synchronized (sh) {
+				for(int i = 0; i < graLists.size(); i ++)
+				{
+					graLists.get(i).goDown(speed);
+					
+				}				
+				if(graLists.get(graLists.size() - 1).getTop() > 10 )
+					graLists.add(new MyGraph(width, height));
+				if(graLists.get(0).getBottom() >= height)
+				{
+					if(!GameRule(graLists.get(0)))
+					{
+						Message msg = new Message();
+						Bundle bundle = new Bundle();
+						msg.what = 2;
+						bundle.putInt("score", scroe);
+						msg.setData(bundle);
+//						gameOverDraw();
+						graLists.clear();
+						pauseGame = true;
+//						isOver = true;
+						handler.sendMessage(msg);
+						return ;
+					}
+					if(focus_gra > 0)
+						focus_gra --;
+				}
+				else
+					draw();
+			}
+		}
+	}
+	
+
+	@Override
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+/*		if(isOver)
+		{
+			graLists.add(new MyGraph(width, height));
+			scroe = 0;
+			speed = 10f;
+			pauseGame = false;
+			isOver = false;
+			focus_gra = 0;
+			game = new Thread(this);
+			game.start();
+			return true;
+		}
+*/			
+		switch(event.getAction())
+		{
+		case MotionEvent.ACTION_DOWN:
+			X = locationX = (int)event.getX();
+			Y = locationY = (int)event.getY();			
+			return true;
+		case MotionEvent.ACTION_MOVE:
+			X = (int)event.getX();
+			Y = (int)event.getY();
+			return true;
+		case MotionEvent.ACTION_UP:
+			Judge(X, Y);
+			return true;
+		}
+		return super.onTouchEvent(event);		
+		
+	}
+	private void Judge(int x, int y){
+		if(graLists.size()-1 < focus_gra)
+			return;
+		if(X < locationX && Math.abs(locationX - X) > Math.abs(locationY - Y))
+		{
+			graLists.get(focus_gra).setPos(1);
+			focus_gra ++;
+		}
+		else if(X > locationX && Math.abs(X - locationX) > Math.abs(locationY - Y))
+		{
+			graLists.get(focus_gra).setPos(2);
+			focus_gra ++;			
+		}
+		else if(Y < locationY && Math.abs(locationX - X) < Math.abs(locationY - Y))
+		{
+			
+		}
+		else if(Y > locationY && Math.abs(locationX - X) < Math.abs(locationY - Y))
+		{
+			focus_gra ++;
+		}
+		playVideo();
+		draw();
+		
+	}
+	private void playVideo(){
+		streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);       
+	    volume = streamVolumeCurrent / streamVolumeMax;
+	    sildeVideo.play(video, volume, volume, 1, 0, 1f);
+	//    sildeVideo.play(soundPoolMap.get(1), volume, volume, 1, 0, 1f);
+	}
+	
+	private boolean GameRule(MyGraph mg){
+		if(mg.getDir() == 0 && mg.getLeft() == MyGraph.splite)
+		{
+			scroe += 50;
+			graLists.remove(0);
+			return true;
+		}
+		else if(mg.getDir() == 1 && mg.getRight() == width - MyGraph.splite)
+		{
+			scroe += 50;
+			graLists.remove(0);
+			return true;
+		}
+		else if(mg.getDir() == 3 && mg.getLeft() == width/2 - MyGraph.squLength/2)
+		{
+			scroe += 50;
+			graLists.remove(0);
+			return true;
+		}
+		return false;
+	}
+
+}

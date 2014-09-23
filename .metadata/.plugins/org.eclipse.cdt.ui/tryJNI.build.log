@@ -1,0 +1,11 @@
+16:16:23 **** Incremental Build of configuration Default for project tryJNI ****
+"D:\\android\\android-ndk-r10b\\ndk-build.cmd" all 
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 14 in ./AndroidManifest.xml    
+[armeabi] Compile++ thumb: HelloJNIWorld <= HelloJNIWorld.cpp
+In file included from jni/HelloJNIWorld.cpp:3:0:
+jni/iostream:6:19: fatal error: istream: No such file or directory
+compilation terminated.
+make.exe: *** [obj/local/armeabi/objs/HelloJNIWorld/HelloJNIWorld.o] Error 1
+
+16:16:24 Build Finished (took 1s.85ms)
+

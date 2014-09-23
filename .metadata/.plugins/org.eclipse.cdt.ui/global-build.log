@@ -1,0 +1,45 @@
+17:05:08 **** Build of configuration Default for project HelloJni ****
+"D:\\android\\android-ndk-r10b\\ndk-build.cmd" all 
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 3 in ./AndroidManifest.xml    
+[armeabi-v7a] Gdbserver      : [arm-linux-androideabi-4.6] libs/armeabi-v7a/gdbserver
+[armeabi-v7a] Gdbsetup       : libs/armeabi-v7a/gdb.setup
+[armeabi] Gdbserver      : [arm-linux-androideabi-4.6] libs/armeabi/gdbserver
+[armeabi] Gdbsetup       : libs/armeabi/gdb.setup
+[x86] Gdbserver      : [x86-4.6] libs/x86/gdbserver
+[x86] Gdbsetup       : libs/x86/gdb.setup
+[mips] Gdbserver      : [mipsel-linux-android-4.6] libs/mips/gdbserver
+[mips] Gdbsetup       : libs/mips/gdb.setup
+[armeabi-v7a] Compile thumb  : hello-jni <= hello-jni.c
+[armeabi-v7a] SharedLibrary  : libhello-jni.so
+[armeabi-v7a] Install        : libhello-jni.so => libs/armeabi-v7a/libhello-jni.so
+[armeabi] Compile thumb  : hello-jni <= hello-jni.c
+[armeabi] SharedLibrary  : libhello-jni.so
+[armeabi] Install        : libhello-jni.so => libs/armeabi/libhello-jni.so
+[x86] Compile        : hello-jni <= hello-jni.c
+[x86] SharedLibrary  : libhello-jni.so
+[x86] Install        : libhello-jni.so => libs/x86/libhello-jni.so
+[mips] Compile        : hello-jni <= hello-jni.c
+[mips] SharedLibrary  : libhello-jni.so
+[mips] Install        : libhello-jni.so => libs/mips/libhello-jni.so
+09:09:02 **** Build of configuration Default for project testjni ****
+"D:\\android\\android-ndk-r10b\\ndk-build.cmd" all 
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 8 in ./AndroidManifest.xml    
+[armeabi-v7a] Compile++ thumb: helloWorld <= helloWorld.cpp
+[armeabi-v7a] SharedLibrary  : libhelloWorld.so
+[armeabi-v7a] Install        : libhelloWorld.so => libs/armeabi-v7a/libhelloWorld.so
+[armeabi] Compile++ thumb: helloWorld <= helloWorld.cpp
+[armeabi] SharedLibrary  : libhelloWorld.so
+[armeabi] Install        : libhelloWorld.so => libs/armeabi/libhelloWorld.so
+[x86] Compile++      : helloWorld <= helloWorld.cpp
+[x86] SharedLibrary  : libhelloWorld.so
+[x86] Install        : libhelloWorld.so => libs/x86/libhelloWorld.so
+[mips] Compile++      : helloWorld <= helloWorld.cpp
+[mips] SharedLibrary  : libhelloWorld.so
+[mips] Install        : libhelloWorld.so => libs/mips/libhelloWorld.so
+09:19:05 **** Build of configuration Default for project testjni ****
+"D:\\android\\android-ndk-r10b\\ndk-build.cmd" all 
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 8 in ./AndroidManifest.xml    
+[armeabi-v7a] Install        : libhelloWorld.so => libs/armeabi-v7a/libhelloWorld.so
+[armeabi] Install        : libhelloWorld.so => libs/armeabi/libhelloWorld.so
+[x86] Install        : libhelloWorld.so => libs/x86/libhelloWorld.so
+[mips] Install        : libhelloWorld.so => libs/mips/libhelloWorld.so

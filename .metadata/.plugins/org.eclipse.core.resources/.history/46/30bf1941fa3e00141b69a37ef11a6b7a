@@ -1,0 +1,42 @@
+package myhttp;
+
+import java.net.*;
+import java.io.*;
+public class MyHttp {
+
+	public String readHttpRespondFromGet(String url) throws Exception
+	{
+		String respondStr = "";
+		if(!url.startsWith("http://"))
+		{
+			url += "http://" + url;
+		}
+		URL u = new URL(url);
+		HttpURLConnection connect = (HttpURLConnection) u.openConnection();
+		connect.setConnectTimeout(2000);
+		connect.connect();
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+		String line ;
+		while((line = br.readLine()) != null)
+		{
+			respondStr += line;
+		}
+		br.close();
+		connect.disconnect();
+		return respondStr;	
+	}
+	
+	public String readHttpRespondFromPost(String url) throws Exception
+	{
+		String respondStr = "";
+		if(!url.startsWith("http://"))
+		{
+			url += "hrrp://" + url;
+		}
+		URL u = new URL(url);
+		HttpURLConnection connect = (HttpURLConnection) u.openConnection();
+		connect.setDoOutput(true);
+		connect.setConnectTimeout(2000);
+	}
+}

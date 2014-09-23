@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<LinearLayout android:layout_width="fill_parent"
+		android:orientation="vertical" android:layout_height="fill_parent"
+		android:id="@+id/linearLayout1">
+		<TextView android:id="@+id/textView1" android:gravity="center"
+			android:layout_width="fill_parent" android:layout_marginTop="60px"
+			android:textSize="45px" android:layout_marginBottom="30px"
+			android:layout_height="wrap_content" android:text="欢迎使用 "></TextView>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/linearLayout2">
+			<TextView android:layout_marginLeft="5px"
+				android:layout_marginRight="3px" android:id="@+id/textView2"
+				android:layout_width="110px" android:layout_height="wrap_content"
+				android:text="Username::" android:gravity="right"></TextView>
+			<EditText android:id="@+id/Username_editText"
+				android:layout_marginRight="15px" android:inputType="text"
+				android:layout_width="wrap_content" android:layout_weight="1"
+				android:layout_height="wrap_content"></EditText>
+		</LinearLayout>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/linearLayout3">
+			<TextView android:layout_marginLeft="5px"
+				android:layout_marginRight="3px" android:id="@+id/textView3"
+				android:layout_width="110px" android:layout_height="wrap_content"
+				android:text="Password::" android:gravity="right"></TextView>
+			<EditText android:id="@+id/Password_editText"
+				android:layout_marginRight="15px" android:inputType="number|textPassword"
+				android:password="true" android:layout_width="wrap_content"
+				android:layout_weight="1" android:layout_height="wrap_content"></EditText>
+		</LinearLayout>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/linearLayout4"
+			android:gravity="center">
+			<Button android:text="登录 " android:layout_marginRight="10px"
+				android:id="@+id/login_button" android:layout_width="140px"
+				android:layout_height="wrap_content"></Button>
+			<Button android:text="退出 " android:layout_marginLeft="10px"
+				android:id="@+id/exit_button" android:layout_width="140px"
+				android:layout_height="wrap_content"></Button>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

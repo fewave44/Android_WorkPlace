@@ -1,0 +1,23 @@
+package com.example;
+
+import myhttp.*;
+public class main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		MyHttp http = new MyHttp();
+		String respondStr = "";
+		String url = "http://fanyi.youdao.com/translate";
+		String message = "type=AUTO&i=hello&doctype=json&xmlVersion=1.6&keyfrom=fanyi.web&ue=UTF-8&typoResult=true";
+		try
+		{
+			respondStr = http.readHttpRespondFromPost(url,url);
+		}
+		catch (Exception e)
+		{
+			System.out.println(e);
+		}
+		System.out.println(respondStr);
+	}
+
+}

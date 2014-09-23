@@ -1,0 +1,9 @@
+15:44:03 **** Incremental Build of configuration Default for project myJNI ****
+"D:\\android\\android-ndk-r10b\\ndk-build.cmd" all 
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 14 in ./AndroidManifest.xml    
+[armeabi-v7a] Compile thumb  : JNITest <= com_example_myjni_myJNI.c
+此时不应有 -Ijni。
+make.exe: *** [obj/local/armeabi-v7a/objs/JNITest/com_example_myjni_myJNI.o] Error 255
+
+15:44:05 Build Finished (took 1s.161ms)
+

@@ -1,0 +1,10 @@
+09:19:05 **** Build of configuration Default for project testjni ****
+"D:\\android\\android-ndk-r10b\\ndk-build.cmd" all 
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 8 in ./AndroidManifest.xml    
+[armeabi-v7a] Install        : libhelloWorld.so => libs/armeabi-v7a/libhelloWorld.so
+[armeabi] Install        : libhelloWorld.so => libs/armeabi/libhelloWorld.so
+[x86] Install        : libhelloWorld.so => libs/x86/libhelloWorld.so
+[mips] Install        : libhelloWorld.so => libs/mips/libhelloWorld.so
+
+09:19:10 Build Finished (took 4s.751ms)
+

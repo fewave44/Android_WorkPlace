@@ -1,0 +1,50 @@
+package com.example.onlinetranslation;
+
+import java.net.URLEncoder;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
+import myhttp.MyHttp;
+
+public class Translate extends Thread{
+	public MyHttp http;
+	private Context context;
+	private Handler handler;
+	private String txtInput;
+	public Translate(Context context,Handler handler,String str) {
+		// TODO Auto-generated constructor stub
+		http = new MyHttp();
+		this.context = context;
+		this.handler = handler;
+		txtInput = str;
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub	
+		super.run();
+		String respondStr = "";
+		String url = "http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=http://dict.youdao.com/";		
+		try
+		{
+			String message = "type=AUTO&i="+ URLEncoder.encode("txtInput","UTF-8") +"&doctype=json&xmlVersion=1.6&keyfrom=fanyi.web&ue=UTF-8&typoResult=true";
+			respondStr = http.readHttpResponseFromPost(url,message);
+		}
+		catch (Exception e)
+		{
+			Toast.makeText(context,R.string.http_error,1);
+			return;
+		}
+		int right = respondStr.lastIndexOf("\"");
+		int left = respondStr.lastIndexOf("\"", right - 1);
+		Message message = new Message();
+		Bundle bundle = new Bundle();
+		bundle.putString("Val", respondStr.substring(left + 1, right));
+		message.setData(bundle);
+		handler.sendMessage(message);
+	}
+
+}

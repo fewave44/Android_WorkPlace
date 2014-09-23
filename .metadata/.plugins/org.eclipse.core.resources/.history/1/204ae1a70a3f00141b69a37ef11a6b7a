@@ -1,0 +1,34 @@
+package com.example.onlinetranslation;
+
+import java.net.URLEncoder;
+
+import android.content.Context;
+import android.widget.Toast;
+import myhttp.MyHttp;
+
+public class Translate extends Thread{
+	public MyHttp http;
+	private Context context;
+	public Translate(Context context) {
+		// TODO Auto-generated constructor stub
+		http = new MyHttp();
+		this.context = context;
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub	
+		super.run();
+		String respondStr = "";
+		String url = "http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=http://dict.youdao.com/";		
+		try
+		{
+			String message = "type=AUTO&i="+ URLEncoder.encode("","UTF-8") +"&doctype=json&xmlVersion=1.6&keyfrom=fanyi.web&ue=UTF-8&typoResult=true";
+			respondStr = http.readHttpResponseFromPost(url,message);
+		}
+		catch (Exception e)
+		{
+			Toast.makeText(context,R.string.http_error,1);
+		}
+	}
+
+}

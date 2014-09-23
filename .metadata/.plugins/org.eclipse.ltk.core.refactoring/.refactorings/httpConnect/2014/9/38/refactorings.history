@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy package &apos;myhttp&apos; to &apos;onlineTranslation/src&apos;&#x0D;&#x0A;- Original project: &apos;httpConnect&apos;&#x0D;&#x0A;- Destination element: &apos;onlineTranslation/src&apos;&#x0D;&#x0A;- Original element: &apos;httpConnect/src/myhttp&apos;" description="Copy package" destination="=onlineTranslation/src" element1="/src&lt;myhttp" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1411026566467" version="1.0"/>
+</session>

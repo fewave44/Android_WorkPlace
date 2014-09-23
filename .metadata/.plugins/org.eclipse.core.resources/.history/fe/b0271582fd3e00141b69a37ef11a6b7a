@@ -1,0 +1,22 @@
+package com.example;
+
+import myhttp.*;
+public class main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		MyHttp http = new MyHttp();
+		String respondStr = "";
+		String url = "http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=http://dict.youdao.com/";
+		try
+		{
+			respondStr = http.readHttpRespondFromGet(url);
+		}
+		catch (Exception e)
+		{
+			System.out.println(e);
+		}
+		System.out.println(respondStr);
+	}
+
+}
